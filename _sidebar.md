@@ -12,6 +12,7 @@
   * [我的 AI 使用](knowledge/temp/my-ai-usage.md)
   * [Skills 学习](knowledge/temp/skills-learning.md)
   * [软件列表](knowledge/temp/softlist.md)
+  * [多设备 GitHub 同步](knowledge/temp/github-multi-device-sync.md)
 
 * **关于**
   * [关于本知识库](README.md)
