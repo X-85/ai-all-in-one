@@ -13,6 +13,7 @@
   * [Skills 学习](knowledge/temp/skills-learning.md)
   * [软件列表](knowledge/temp/softlist.md)
   * [多设备 GitHub 同步](knowledge/temp/github-multi-device-sync.md)
+  * [Git 学习总结](knowledge/temp/git-learn.md)
 
 * **关于**
   * [关于本知识库](README.md)
