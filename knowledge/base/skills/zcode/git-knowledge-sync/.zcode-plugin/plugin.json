@@ -1,0 +1,8 @@
+{
+  "name": "git-knowledge-sync",
+  "version": "0.1.0",
+  "description": "AI 知识库的 Git 同步和提交流程（跨平台版）。",
+  "author": { "name": "Bruce" },
+  "license": "MIT",
+  "skills": "skills"
+}

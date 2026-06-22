@@ -1,11 +1,11 @@
 ---
 name: git-knowledge-sync
-description: AI 知识库的 Git 同步和提交流程。当用户主动要求提交、推送、同步 ai-all-in-one 知识库，或提到"提交知识库"、"git push"、"推送到 GitHub"等关键词时触发。也支持通过斜杠命令 /git-knowledge-sync 调用。此 skill 不会自动检测文件变更，必须由用户主动触发。执行流程：拉取远程代码、处理冲突、分析变更、生成符合 Conventional Commits 格式的中文提交信息并推送到 GitHub。
+description: AI 知识库的 Git 同步和提交流程。当用户主动要求提交、推送、同步 ai-all-in-one 知识库，或提到"提交知识库"、"git push"、"推送到 GitHub"等关键词时触发。也支持通过斜杠命令 /git-knowledge-sync 调用。此 skill 不会自动检测文件变更，必须由用户主动触发。执行流程：拉取远程代码、处理冲突、分析变更、生成符合 Conventional Commits 格式的中文提交信息并推送到 GitHub。跨平台版本，支持 Windows / macOS / Linux。
 ---
 
-# Git Knowledge Sync
+# Git Knowledge Sync（跨平台版）
 
-AI 知识库的 Git 同步和提交流程，专门针对 `D:\personal\XProject\ai-all-in-one` 仓库。
+AI 知识库的 Git 同步和提交流程，专门针对 `ai-all-in-one` 仓库。**支持 Windows / macOS / Linux**。
 
 ## 触发条件
 
@@ -15,6 +15,31 @@ AI 知识库的 Git 同步和提交流程，专门针对 `D:\personal\XProject\a
 
 **不会**自动检测文件变更而触发。所有提交都必须由用户主动发起。
 
+## 路径处理（跨平台兼容）
+
+**核心原则：skill 中不写死绝对路径**，统一通过 `git rev-parse` 自动定位仓库根目录。
+
+```bash
+# bash / zsh（macOS、Linux）
+cd "$(git rev-parse --show-toplevel)"
+
+# PowerShell（Windows）
+Set-Location (git rev-parse --show-toplevel)
+```
+
+如果当前目录不在 git 仓库中：
+```bash
+# 优先使用环境变量，否则用默认路径
+REPO_DIR="${KNOWLEDGE_REPO:-$HOME/ai-all-in-one/knowledge}"
+cd "$REPO_DIR"
+```
+
+Windows 下：
+```powershell
+$repoDir = $env:KNOWLEDGE_REPO ?? "$HOME\ai-all-in-one\knowledge"
+Set-Location $repoDir
+```
+
 ## 工作流程
 
 按顺序执行以下步骤：
@@ -22,7 +47,10 @@ AI 知识库的 Git 同步和提交流程，专门针对 `D:\personal\XProject\a
 ### Step 1：进入仓库目录并检查状态
 
 ```bash
-cd D:\personal\XProject\ai-all-in-one
+cd "$(git rev-parse --show-toplevel)" 2>/dev/null || {
+  echo "❌ 当前目录不在 git 仓库内"
+  exit 1
+}
 git status
 ```
 
@@ -141,9 +169,15 @@ git push origin main
 
 **如果推送失败：**
 
-1. 网络问题：重试一次，仍然失败则提示用户
-2. 权限问题：检查 SSH key 是否正确
-3. 非快进：可能远程有新提交，重新执行 Step 2 的拉取流程
+1. **网络问题（macOS 常见）**：用 HTTP/1.1 重试
+   ```bash
+   git -c http.version=HTTP/1.1 push origin main
+   ```
+2. **认证问题**：
+   - macOS 首次推送会弹出凭据框，输入 GitHub 用户名 + Personal Access Token
+   - 或提前配置：`git config --global credential.helper osxkeychain`
+   - Windows SSH 推送失败：检查 `~/.ssh/config` 和 `ssh-add -l`
+3. **非快进**：可能远程有新提交，重新执行 Step 2 的拉取流程
 
 ### Step 7：反馈结果
 
@@ -168,18 +202,22 @@ git push origin main
 3. **提交前要分析变更**：不要直接用 `git add .` 然后写个空泛的提交信息
 4. **commit message 要有意义**：未来回看时要能一眼看懂改了什么
 5. **推送失败要诚实**：不要假装成功，让用户知道出了什么问题
+6. **路径自适应**：用 `git rev-parse` 而非硬编码绝对路径
 
 ## 仓库信息
 
-- **本地路径**：`D:\personal\XProject\ai-all-in-one`
-- **远程地址**：`git@github.com:X-85/ai-all-in-one.git`（SSH）
+- **本地路径**：通过 `git rev-parse --show-toplevel` 自动获取，或环境变量 `KNOWLEDGE_REPO`
+- **远程地址**：`https://github.com/X-85/ai-all-in-one.git`（HTTPS + PAT，跨平台通用）
 - **主分支**：`main`
-- **认证方式**：SSH（无需密码）
+- **认证方式**：HTTPS + Personal Access Token（Windows、macOS、Linux 都支持）
+
+> **平台覆盖文件**：如需针对特定平台定制，可创建 `SKILL.md.macos` / `SKILL.md.windows` / `SKILL.md.linux` 覆盖默认内容，安装脚本会自动选择。
 
 ## 常用命令速查
 
 | 命令 | 用途 |
 |------|------|
+| `git rev-parse --show-toplevel` | 获取 git 仓库根目录 |
 | `git status` | 查看仓库状态 |
 | `git status --short` | 简洁查看 |
 | `git diff --stat HEAD` | 查看变更统计 |
@@ -189,11 +227,12 @@ git push origin main
 | `git reset --hard origin/main` | 强制同步远程 |
 | `git log --oneline -5` | 查看最近 5 次提交 |
 | `git remote -v` | 查看远程地址 |
+| `git -c http.version=HTTP/1.1 push origin main` | HTTP/2 不稳定时降级为 HTTP/1.1 |
 
 ## 错误处理
 
-### 情况 1：网络超时
-- 重试一次
+### 情况 1：网络超时 / HTTP/2 framing layer 错误（macOS 常见）
+- 重试一次，仍然失败则用 `git -c http.version=HTTP/1.1` 重新执行对应命令
 - 如果还失败，告诉用户可能是网络问题，建议稍后再试或检查代理
 
 ### 情况 2：rebase 冲突
@@ -205,6 +244,23 @@ git push origin main
 - 重新执行 Step 2 的拉取流程
 - 然后再推送
 
-### 情况 4：用户没在仓库目录
-- 自动 `cd D:\personal\XProject\ai-all-in-one`
+### 情况 4：认证失败
+- **macOS**：提示用户在弹窗中输入 GitHub 用户名和 Personal Access Token；或配置 `git config --global credential.helper osxkeychain`
+- **Windows**：检查 `~/.ssh/id_ed25519` 是否存在并已添加到 GitHub；或使用 `git credential-manager` 弹窗输入 PAT
+
+### 情况 5：用户没在仓库目录
+- 自动 `cd "$(git rev-parse --show-toplevel)"`
+- 如果还是找不到，使用环境变量 `$KNOWLEDGE_REPO` 或默认路径
 - 如果目录不存在，提示用户检查路径
+
+## 安装方式（一行命令）
+
+### macOS / Linux
+```bash
+curl -fsSL https://raw.githubusercontent.com/X-85/ai-all-in-one/main/knowledge/base/skills/zcode/git-knowledge-sync/install.sh | bash
+```
+
+### Windows (PowerShell)
+```powershell
+irm https://raw.githubusercontent.com/X-85/ai-all-in-one/main/knowledge/base/skills/zcode/git-knowledge-sync/install.ps1 | iex
+```
