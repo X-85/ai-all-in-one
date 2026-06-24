@@ -30,6 +30,12 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Generate _sidebar.md
+        run: |
+          python3 scripts/gen_sidebar.py
+          echo "--- generated _sidebar.md (first 30 lines) ---"
+          head -30 _sidebar.md
+
       - name: Inject git SHA into index.html
         env:
           SHORT_SHA: ${{ github.sha }}
