@@ -196,3 +196,76 @@ git push
 - [Git 官方文档](https://git-scm.com/doc)
 - [GitHub SSH 文档](https://docs.github.com/authentication/connecting-to-github-with-ssh)
 - [GitHub PAT 文档](https://docs.github.com/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+
+---
+
+## Git Pages 总结(精简版)
+
+### 是什么
+
+GitHub Pages = GitHub 提供的**免费静态网站托管**。`git push` 后站点自动更新,无需手动发布。
+
+### 三种部署方式
+
+| 方式 | 触发 | 适用 |
+|------|------|------|
+| `Deploy from a branch`(默认) | push 后自动 | 简单静态站点 |
+| `gh-pages` 分支 | push 到 gh-pages | 经典方式 |
+| **GitHub Actions**(本仓库用) | 自定义 workflow | 灵活,可注入构建戳、自动生成 sidebar |
+
+### 本仓库的部署链
+
+文件 `.github/workflows/pages.yml`:
+
+```
+push → 生成 _sidebar.md → 注入 build 戳到 index.html → 部署到 Pages
+```
+
+### 关键文件
+
+```
+.github/workflows/pages.yml  ← workflow 定义
+scripts/gen_sidebar.py       ← 自动生成左侧导航
+index.html                   ← docsify 入口(顶部有 build 戳)
+_sidebar.md                  ← 自动生成,不要手改
+```
+
+### 浏览器看不到更新?多半是缓存
+
+| 缓存层 | 表现 | 解决 |
+|--------|------|------|
+| 浏览器 | 刷新没变化 | `Cmd+Shift+R` 强制刷新 |
+| Fastly CDN | 10 分钟内仍返回旧版 | 等 `max-age=600` 过期 |
+| 应用缓存 | 一直旧版 | 无痕模式 / 清缓存 |
+
+**根治**:每次部署注入 `<!-- build: <sha> @ <时间戳> -->` 到 `index.html`,内容变了缓存必失效。
+
+### 一次完整部署耗时
+
+- build job: 20-30 秒
+- deploy job: **30 秒到 6 分钟不等**(GitHub Pages 服务端偶发延迟)
+- CDN 缓存: `max-age=600`(10 分钟)
+- **耐心等 5-10 分钟**再下结论
+
+### 切换部署方式(一次性手动)
+
+`Settings → Pages → Source`:默认 `Deploy from a branch`,推荐改成 **`GitHub Actions`**。
+
+### 诊断命令
+
+```bash
+# 查 Pages 部署状态
+curl -sS "https://api.github.com/repos/X-85/ai-all-in-one/actions/runs?per_page=3"
+
+# 查 build 戳(确认部署到哪个 commit)
+curl -sS https://x-85.github.io/ai-all-in-one/ | head -1
+
+# 查 sidebar 内容
+curl -sS https://x-85.github.io/ai-all-in-one/_sidebar.md | head
+```
+
+### 经验教训
+
+1. **别被"页面没更新"误导** — 先用诊断命令确认 Pages 真部署了,再判断是缓存还是配置问题
+2. **build 戳是最有效的 debug 信号** — 它直接告诉你 CDN serve 的是哪个 commit
+3. **Pages 配置切到 GitHub Actions 是一次性操作** — 切完后所有 push 都由 workflow 自动处理
