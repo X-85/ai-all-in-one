@@ -1,0 +1,80 @@
+name: Deploy Pages with build stamp
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 防止并发部署:短时间内多次 push 只部署最新一次
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+# 默认所有 job 在 GitHub 托管 runner 上跑
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    name: Inject build stamp and upload artifact
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Inject git SHA into index.html
+        env:
+          SHORT_SHA: ${{ github.sha }}
+        run: |
+          SHORT="${SHORT_SHA::7}"
+          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          echo "Injecting build stamp: ${SHORT} @ ${TIMESTAMP}"
+
+          python3 - <<PY
+          import re, pathlib, os
+          short_sha = "${SHORT}"
+          timestamp = "${TIMESTAMP}"
+          p = pathlib.Path("index.html")
+          if not p.exists():
+            raise SystemExit("index.html not found at repo root")
+          text = p.read_text(encoding="utf-8")
+          # 移除旧 build 标记(若有),保证幂等
+          text = re.sub(r"<!--\s*build:.*?-->\n?", "", text)
+          stamp = f"<!-- build: {short_sha} @ {timestamp} -->\n"
+          p.write_text(stamp + text, encoding="utf-8")
+          print(f"OK: injected build stamp into index.html ({p.stat().st_size} bytes)")
+          PY
+
+      - name: Verify injection
+        run: |
+          head -3 index.html
+          echo "---"
+          grep -c "build:" index.html && echo "build marker present"
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
