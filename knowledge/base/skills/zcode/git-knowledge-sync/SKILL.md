@@ -29,14 +29,14 @@ Set-Location (git rev-parse --show-toplevel)
 
 如果当前目录不在 git 仓库中：
 ```bash
-# 优先使用环境变量，否则用默认路径
-REPO_DIR="${KNOWLEDGE_REPO:-$HOME/ai-all-in-one/knowledge}"
+# 优先使用环境变量，否则用当前工作目录
+REPO_DIR="${KNOWLEDGE_REPO:-$(pwd)}"
 cd "$REPO_DIR"
 ```
 
 Windows 下：
 ```powershell
-$repoDir = $env:KNOWLEDGE_REPO ?? "$HOME\ai-all-in-one\knowledge"
+$repoDir = $env:KNOWLEDGE_REPO ?? $PWD
 Set-Location $repoDir
 ```
 
@@ -211,8 +211,6 @@ git push origin main
 - **主分支**：`main`
 - **认证方式**：HTTPS + Personal Access Token（Windows、macOS、Linux 都支持）
 
-> **平台覆盖文件**：如需针对特定平台定制，可创建 `SKILL.md.macos` / `SKILL.md.windows` / `SKILL.md.linux` 覆盖默认内容，安装脚本会自动选择。
-
 ## 常用命令速查
 
 | 命令 | 用途 |
@@ -246,21 +244,28 @@ git push origin main
 
 ### 情况 4：认证失败
 - **macOS**：提示用户在弹窗中输入 GitHub 用户名和 Personal Access Token；或配置 `git config --global credential.helper osxkeychain`
+- **Linux**：配置 `git config --global credential.helper cache`（临时 1 小时）或 `store`（永久、明文）；生产环境推荐用 SSH
 - **Windows**：检查 `~/.ssh/id_ed25519` 是否存在并已添加到 GitHub；或使用 `git credential-manager` 弹窗输入 PAT
 
-### 情况 5：用户没在仓库目录
+### 情况 5：xcode-select / xcrun 缺失（macOS）
+- 提示用户安装 Xcode Command Line Tools：`xcode-select --install`
+- 某些 Git 操作（特别是 HTTPS clone）依赖 CLT 中的 `git` 和 `curl`
+
+### 情况 6：用户没在仓库目录
 - 自动 `cd "$(git rev-parse --show-toplevel)"`
-- 如果还是找不到，使用环境变量 `$KNOWLEDGE_REPO` 或默认路径
+- 如果还是找不到，使用环境变量 `$KNOWLEDGE_REPO` 或当前工作目录
 - 如果目录不存在，提示用户检查路径
 
 ## 安装方式（一行命令）
 
 ### macOS / Linux
 ```bash
-curl -fsSL https://raw.githubusercontent.com/X-85/ai-all-in-one/main/knowledge/base/skills/zcode/git-knowledge-sync/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/X-85/ai-all-in-one/main/knowledge/base/skills/zcode/install.sh | bash
 ```
 
 ### Windows (PowerShell)
 ```powershell
-irm https://raw.githubusercontent.com/X-85/ai-all-in-one/main/knowledge/base/skills/zcode/git-knowledge-sync/install.ps1 | iex
+irm https://raw.githubusercontent.com/X-85/ai-all-in-one/main/knowledge/base/skills/zcode/install.ps1 | iex
 ```
+
+> 安装脚本会遍历 `zcode/` 下所有 skill，按每个 skill 的 `.scope` 文件（`project` / `user`）自动决定安装位置。

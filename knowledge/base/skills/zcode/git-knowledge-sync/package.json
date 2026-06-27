@@ -1,8 +1,0 @@
-{
-  "$schema": "https://json.schemastore.org/package.json",
-  "name": "@bruce/git-knowledge-sync-plugin",
-  "version": "0.1.0",
-  "private": true,
-  "license": "MIT",
-  "description": "AI 知识库 Git 同步与提交 skill（跨平台安装包）。"
-}
