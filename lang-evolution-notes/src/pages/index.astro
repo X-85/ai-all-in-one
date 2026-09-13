@@ -1,0 +1,155 @@
+---
+import { chapters, chapterHref } from '../chapters';
+import Base from '../layouts/Base.astro';
+
+const descriptions: Record<string, string> = {
+  'JS-Node-TS演进路线': '浏览器交互 → 逃出浏览器 → 类型安全网,一条因果链讲清三层模型',
+  Python演进路线: '胶水语言的诞生、2/3 分裂之痛,以及生态抬上来的 AI 王座',
+  Java演进路线: '一次编写到处运行,烟花之后在企业服务器扎根三十年',
+  Go演进路线: '为软件工程服务的简单:goroutine 并发与云原生帝国',
+  Rust演进路线: '内存安全的第三条路:把错误从运行时左移到编译期',
+  构建工具链速查: '五生态的清单文件、包管理器、构建与验收命令一张表',
+};
+
+const matrix = [
+  { lang: 'JS / TS', born: '1995 / 2012', empire: '前端垄断 + npm 生态', lesson: '运行时可换,语言不等于场景' },
+  { lang: 'Python', born: '1989 / 1991', empire: 'AI 与科学计算生态', lesson: '选它是选生态;兼容性是生死线' },
+  { lang: 'Java', born: '1991 / 1995', empire: '企业信息化 + Android', lesson: '兼容神话是统治的根' },
+  { lang: 'Go', born: '2007 / 2009', empire: '云原生(Docker/K8s)', lesson: '简单是特性,"不加什么"也是决策' },
+  { lang: 'Rust', born: '2006 / 2015', empire: '新一代开发工具内核', lesson: '把错误从运行时左移到编译期' },
+];
+---
+
+<Base active="">
+  <section class="hero">
+    <h1>语言演进笔记</h1>
+    <p class="lead">
+      五门主流语言,五条"从痛点到诞生"的因果链。不背年表,只记每个环节解决了上一个环节的什么死结——
+      有了这套层次,做技术选型、读 pi / Codex 这类工具的架构决策,就有了自己的判断。
+    </p>
+  </section>
+
+  <section>
+    <h2 class="sec-title">演进路线</h2>
+    <div class="cards">
+      {
+        chapters
+          .filter((c) => c.group === 'route')
+          .map((c) => (
+            <a class="card" href={chapterHref(c.id)}>
+              <div class="card-label">{c.label}</div>
+              <div class="card-desc">{descriptions[c.id]}</div>
+            </a>
+          ))
+      }
+    </div>
+  </section>
+
+  <section>
+    <h2 class="sec-title">速查</h2>
+    <div class="cards">
+      {
+        chapters
+          .filter((c) => c.group === 'ref')
+          .map((c) => (
+            <a class="card" href={chapterHref(c.id)}>
+              <div class="card-label">{c.label}</div>
+              <div class="card-desc">{descriptions[c.id]}</div>
+            </a>
+          ))
+      }
+    </div>
+  </section>
+
+  <section>
+    <h2 class="sec-title">五语言对照矩阵</h2>
+    <article class="prose-inner">
+      <table>
+        <thead>
+          <tr>
+            <th>语言</th><th>诞生</th><th>帝国来源</th><th>独特教训</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            matrix.map((row) => (
+              <tr>
+                <td><strong>{row.lang}</strong></td>
+                <td>{row.born}</td>
+                <td>{row.empire}</td>
+                <td>{row.lesson}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </article>
+  </section>
+
+  <style>
+    .hero h1 {
+      font-family: Georgia, 'Songti SC', 'SimSun', serif;
+      font-size: 2.3rem;
+      margin: 1rem 0 0.6rem;
+    }
+    .lead {
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 40rem;
+    }
+    .sec-title {
+      font-family: Georgia, 'Songti SC', 'SimSun', serif;
+      font-size: 1.3rem;
+      margin: 2.4rem 0 1rem;
+      padding-bottom: 0.35rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+      gap: 0.8rem;
+    }
+    .card {
+      display: block;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.1rem;
+      text-decoration: none;
+      color: var(--text);
+      box-shadow: var(--shadow);
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+    .card-label {
+      font-family: Georgia, 'Songti SC', 'SimSun', serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin-bottom: 0.35rem;
+    }
+    .card-desc {
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.6;
+    }
+    .prose-inner table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.87rem;
+    }
+    .prose-inner th {
+      background: var(--code-bg);
+      font-weight: 600;
+    }
+    .prose-inner th,
+    .prose-inner td {
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.7rem;
+      text-align: left;
+      vertical-align: top;
+    }
+  </style>
+</Base>
