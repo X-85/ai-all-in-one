@@ -23,13 +23,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        # withastro/action 内置 Upload Pages Artifact 步骤(产物名 github-pages),
+        # 不要再显式调 actions/upload-pages-artifact,否则同名产物 409 冲突
       - uses: withastro/action@v3
         with:
           path: lang-evolution-notes
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: lang-evolution-notes/dist
 
   deploy:
     needs: build
