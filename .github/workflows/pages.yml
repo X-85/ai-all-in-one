@@ -1,8 +1,9 @@
 name: Deploy Pages with build stamp
 
+# 2026-09-13 起改为仅手动触发:该工作流与 lang-evolution-notes 站点
+# 部署到同一个 Pages 地址,自动触发会互相覆盖。
+# 需要恢复 Docsify 全库视图时,在 Actions 页面手动 Run workflow 即可(会覆盖新站点)。
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch:
 
 permissions:
