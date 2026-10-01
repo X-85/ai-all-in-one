@@ -17,6 +17,7 @@ export const chapters: Chapter[] = [
   { id: 'LLM基础认知-生成机制(上)', label: '生成机制(上)', group: 'principle' },
   { id: 'LLM基础认知-生成机制(下)', label: '生成机制(下)', group: 'principle' },
   { id: 'LLM基础认知-检索原理', label: '检索原理', group: 'principle' },
+  { id: 'LLM基础认知-上下文工程', label: '上下文工程(延伸)', group: 'principle' },
   { id: 'RAG系统设计复盘', label: 'RAG 系统设计复盘', group: 'engineering' },
   { id: 'Agent编码工具横评', label: '工具横评(待回填)', group: 'engineering' },
   { id: '工作流agent实践', label: '工作流 agent 实践', group: 'engineering' },

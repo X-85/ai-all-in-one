@@ -11,6 +11,8 @@ const descriptions: Record<string, string> = {
     '上下文与注意力 / 能力边界与工具外挂 / 推理模型 / 微调 vs RAG / 多模态与格局',
   'LLM基础认知-检索原理':
     'embedding / 向量检索与失效模式 / rerank 两段式 / chunking——RAG 管线的每个设计都是被检索的物理规律逼出来的',
+  'LLM基础认知-上下文工程':
+    '容量/注意力/成本三约束 → 六族通用方案(按需加载/压缩/隔离/记忆外置/结构化位置/缓存)——RAG、记忆、/compact、sub-agent 都是同一件事的不同侧面',
   'RAG系统设计复盘':
     'FAQ 智能体问答系统(钉钉 + AstrBot)全链路复盘:设计存档 → 原理对照 → 改进',
   'Agent编码工具横评':
@@ -35,7 +37,7 @@ const groupIntro: Record<string, string> = {
 };
 
 const framework = [
-  { layer: '原理层', ratio: '20%', focus: '深度判据是"能从原理讲到工程取舍":生成机制上/下、检索原理已成稿' },
+  { layer: '原理层', ratio: '20%', focus: '深度判据是"能从原理讲到工程取舍":生成机制上/下、检索原理、上下文工程(延伸篇)已成稿' },
   { layer: '工程层', ratio: '30%', focus: 'RAG 全链路 / agent 编排 / 工作流:复盘与工作流实践成稿,工具横评待回填' },
   { layer: '质量层', ratio: '20%', focus: 'evals / 可观测 / 成本与延迟——市场最缺的一环,骨架待发起' },
   { layer: '证据层', ratio: '30%', focus: '作品集 / 量化指标 / 开源贡献 / 公开输出:作品一是本知识库,作品二是 RAG 系统' },
