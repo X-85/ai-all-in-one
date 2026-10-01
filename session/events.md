@@ -262,6 +262,12 @@
 - 实际结果：证据层闭环(故事库+checklist);专题 11 篇文档;README 第一眼=作品集
 - 下一步：我方可代劳项仅剩质量层骨架(维持等数据);主线移交用户侧:公司六步清单(数据源头)、横评口述回填;checklist 各项按月执行
 
+### Q8 | 第18次处理
+- 问题或新增信息：用户问"是不是没有你可以做的了,给我一个需要我做的清单,形成文档方便检查"
+- 本轮方案：①诚实盘点:需用户输入前 AI 写不了实货(质量层无数据/横评无体感/占位无实测),仅剩公开输出初稿与质量层空心骨架两个低性价比边缘项,不主动写;②产出 ai-career-notes/待办清单.md(工作文档):P0 数据源头(公司六步清单六小项勾选视图引用 Q7 不重抄+横评六工具回填,均带完成口令与下游去向)、P1 占位回填类(复盘 7 占位/简历量化/个人背景/故事库 D3)+执行类(AstrBot 深读启动/输出渠道二选一/10 月末时间线核对)、P2 可选(Q6 试点回填/二三梯队/域名)、每周 ~3h 节奏分配表、状态同步口令存档("看台账 Q8 继续");③接线站点(ext 组末位,构建 12 页);④主干第六节登记(标注工作文档+AI 代劳项清空 2026-10-01);推送 2f09cae
+- 实际结果：待办清单上线;专题 12 篇;工作移交用户侧完成
+- 下一步：全部按待办清单执行;任意数据/口述回流即恢复 AI 协作(质量层/对比表/决策树/占位回填)
+
 ### Q9 | 第1次处理
 - 问题或新增信息：用户想把 ai-career-notes 按 lang-evolution-notes 的方式发布,手机网页可看
 - 本轮方案：①新建 ai-career-notes-site/(复刻演进站五文件结构:glob 零拷贝直读 ai-career-notes/*.md,pattern 排除 AGENTS.md;generateId 保名;分组改 overview/principle/engineering/ext 四组循环渲染;新增任务清单勾选框样式)②部署走 GitHub Pages 双站合并——一个仓库只有一个 Pages 地址,deploy-notes-site.yml 弃用 withastro/action 改为两站各自 npm ci+build、求职站产物 cp 进演进站 dist/career/、全流程仅一次 upload-pages-artifact(规避 409 踩坑),求职站 base=/ai-all-in-one/career/ 且保留 CF_PAGES 切根路径开关③rehype 链接重写两条规则:目录内 .md→站内路由,../knowledge/doc/*.md→GitHub blob 页(站点保持专题纯粹,零级联)④细节:localStorage key 用 ai-career: 前缀(两站同 origin 防冲突);探索期发现 Agent编码工具横评.md 已建(台账探索代理漏报),一并接进 chapters 标注"待回填"⑤验证:本地构建 9 页、产物 grep 链接重写正确、本地干跑 CI 双站合并逻辑、浏览器 375px 移动端程序化检查(汉堡可见/侧栏收起/开合与导航自动收起/零横向溢出)
