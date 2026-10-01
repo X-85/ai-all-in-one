@@ -244,6 +244,12 @@
 - 实际结果：横评填写入口建立,工程层三篇全部有文件(2 成稿+1 待回填);未提交推送(随 Q4 约定)
 - 下一步：用户回填(推荐会话口述);回填后 AI 生成对比表与决策树;可并行发起质量层骨架
 
+### Q8 | 第15次处理
+- 问题或新增信息：用户指令两件——①上传 GitHub ②编写证据层与质量层大纲
+- 本轮方案：①走 git-knowledge-sync:本地远程同 HEAD(并行会话 6698510 已提交专题全部文件并建站,见 Q9),两个 AGENTS.md 与 decisions 站点表述已被并行会话对齐,本会话仅补 .gitignore(.zcode//node_modules//dist/,排除 ZCode 本地 plans);分四组提交——chore(.gitignore)/docs(lang-evolution) 二三批 13 篇+五旧篇补姊妹链+速查+接线/docs(knowledge) RAG·AstrBot·治理·产品能力文档与项目资料/docs(session) 台账三件套+根 AGENTS;推送 6698510..5a069e0 成功,Pages 双站部署触发运行中,备份风险解除;②大纲提案:质量层一篇五主题(golden set 构建(分层单列专名否定类)/回归评测(指标+对照表)/LLM-as-judge(偏差与校准)/可观测(bad case 收集回放)/成本延迟(记账/语义缓存/分级路由)+评测报告模板),数字等公司六步清单回填;证据层两篇——求职材料checklist(简历要点/README 作品化/AstrBot 深读计划/公开输出选题/时间线核对)与面试故事库(情境-动作-结果-学到四段卡,种子故事大半现成:#锚点静默失败/并行撞文件/四路由演进/澄清一轮封顶/答案之书飞轮等,可起草 70%),待用户确认后登记主干第六节
+- 实际结果：推送成功+双站部署中;两层层纲已交付
+- 下一步：用户确认大纲→登记第六节;质量层骨架可先写(数字占位);故事库可先起草;横评回填与公司清单推进不变
+
 ### Q9 | 第1次处理
 - 问题或新增信息：用户想把 ai-career-notes 按 lang-evolution-notes 的方式发布,手机网页可看
 - 本轮方案：①新建 ai-career-notes-site/(复刻演进站五文件结构:glob 零拷贝直读 ai-career-notes/*.md,pattern 排除 AGENTS.md;generateId 保名;分组改 overview/principle/engineering/ext 四组循环渲染;新增任务清单勾选框样式)②部署走 GitHub Pages 双站合并——一个仓库只有一个 Pages 地址,deploy-notes-site.yml 弃用 withastro/action 改为两站各自 npm ci+build、求职站产物 cp 进演进站 dist/career/、全流程仅一次 upload-pages-artifact(规避 409 踩坑),求职站 base=/ai-all-in-one/career/ 且保留 CF_PAGES 切根路径开关③rehype 链接重写两条规则:目录内 .md→站内路由,../knowledge/doc/*.md→GitHub blob 页(站点保持专题纯粹,零级联)④细节:localStorage key 用 ai-career: 前缀(两站同 origin 防冲突);探索期发现 Agent编码工具横评.md 已建(台账探索代理漏报),一并接进 chapters 标注"待回填"⑤验证:本地构建 9 页、产物 grep 链接重写正确、本地干跑 CI 双站合并逻辑、浏览器 375px 移动端程序化检查(汉堡可见/侧栏收起/开合与导航自动收起/零横向溢出)

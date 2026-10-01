@@ -5,11 +5,11 @@
 | Q1 | 语言演进路线文档系列(JS/Python/Java/Go/Rust + 速查表) | 已解决 | 六篇文档完成,归入 knowledge/doc/lang-evolution-notes/ | 系列可继续扩展(见 Q4) |
 | Q2 | Astro 站点发布到 GitHub Pages | 已解决 | 上线 https://x-85.github.io/ai-all-in-one/ ,推送自动部署已验证 | 无 |
 | Q3 | 网址优化:Cloudflare Pages(方案A) | 处理中 | 代码侧 base 适配已推送(CF_PAGES 自动判断);操作清单已交给用户 | 用户网页端手动部署,项目名 lang-evolution-notes |
-| Q4 | 语言/框架/中间件演进文档(C / C++ / C# / SQL / Redis 等) | 处理中 | 演进路线达 18 篇:五语言+Next.js/Vue/React+C/C++/C#/SQL+Redis+一梯队五篇(Kafka/MySQL/Docker-K8s/Spring/Django-Flask-FastAPI);类型词表=语言/框架/中间件/库/平台(Docker-K8s 首收"平台",工程化口径"应用怎么容器化"入 decisions);速查表加三行;暂不推送 | 二/三梯队(Nginx/ES/MongoDB/Git/Rails/Svelte;Kotlin/Swift 等)按兴趣续写;全部完成后一起提交推送 |
+| Q4 | 语言/框架/中间件演进文档(C / C++ / C# / SQL / Redis 等) | 处理中 | 演进路线达 20 篇(二三批 13 篇已随 2026-10-01 全仓推送上线,原"全部写完一起推"约定解除);类型词表=语言/框架/中间件/库/平台 | 二/三梯队(Nginx/ES/MongoDB/Git/Rails/Svelte;Kotlin/Swift 等)按兴趣续写,完成后照常提交推送 |
 | Q5 | 选型对比总文档(五语言横向) | 搁置 | 素材已够(四篇演进文档的对照表) | 用户发起时动笔 |
 | Q6 | AI 读代码+看页面补充产品能力文档 | 试点手册已交付 | 公司试点手册落盘 knowledge/doc/ZCode-MCP巡览与配置文档生成-公司试点手册.md(Windows/网络受限适配:安装三路线含离线便携包、两版挂载 JSON、分阶段提示词与验收、排查表、90 分钟表) | 用户带手册到公司让 ZCode 读取执行,回填效果与踩坑 |
 | Q7 | RAG 问答系统质量设计(钉钉 + AstrBot) | 推进中 | 问答已落盘 knowledge/doc/RAG问答系统质量设计-问答记录与落地方案.md:四路由修正蓝图+六步推进清单(每步带验收)+四个待定决策点 | 用户明日到公司按清单推进,回填实测效果与踩坑 |
-| Q8 | AI 技能体系整理与年后求职准备 | 推进中 | 专题 ai-career-notes/:**原理层 3 篇+工程层 3 篇全部有文件**(生成机制上/下、检索原理、RAG复盘、工作流实践成稿;横评框架+六工具回填区已建待填)+《补充资料》占位 | 用户回填横评(推荐会话口述"帮我填横评的X部分");可发起质量层骨架;公司数据回填双向供给 |
+| Q8 | AI 技能体系整理与年后求职准备 | 推进中 | 专题 ai-career-notes/:原理 3+工程 3 文件齐(横评待回填);**全仓已推送 GitHub**(四组提交,双站部署,备份解除,详见第15次);质量层+证据层大纲已提案(质量一篇五主题+报告模板;证据两篇:求职checklist+面试故事库,故事库可起草 70%) | 用户确认两层大纲→登记第六节;质量层骨架可先写;故事库可起草;横评口述回填;公司清单回填 |
 | Q9 | ai-career-notes 发布为手机可看站点 | 已解决 | 站点 ai-career-notes-site/ 上线(与演进站同构零拷贝直读,AGENTS.md 排除不发布,横评一并接线);deploy-notes-site.yml 改双站一次构建合并部署,挂 /ai-all-in-one/career/;跨目录链接构建时转 GitHub blob;375px 移动端验证通过(抽屉侧栏/零横向溢出);**专题内容随发布先行推送(Q8"随 Q4 一起推"约定就此解耦,Q4 演进文档推送约定不变)** | 新文档按 chapters.ts 接线;内容更新 push 即自动重新部署 |
 
 详细处理过程见 events.md;长期约定见 decisions.md。
