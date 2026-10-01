@@ -273,3 +273,9 @@
 - 本轮方案：①新建 ai-career-notes-site/(复刻演进站五文件结构:glob 零拷贝直读 ai-career-notes/*.md,pattern 排除 AGENTS.md;generateId 保名;分组改 overview/principle/engineering/ext 四组循环渲染;新增任务清单勾选框样式)②部署走 GitHub Pages 双站合并——一个仓库只有一个 Pages 地址,deploy-notes-site.yml 弃用 withastro/action 改为两站各自 npm ci+build、求职站产物 cp 进演进站 dist/career/、全流程仅一次 upload-pages-artifact(规避 409 踩坑),求职站 base=/ai-all-in-one/career/ 且保留 CF_PAGES 切根路径开关③rehype 链接重写两条规则:目录内 .md→站内路由,../knowledge/doc/*.md→GitHub blob 页(站点保持专题纯粹,零级联)④细节:localStorage key 用 ai-career: 前缀(两站同 origin 防冲突);探索期发现 Agent编码工具横评.md 已建(台账探索代理漏报),一并接进 chapters 标注"待回填"⑤验证:本地构建 9 页、产物 grep 链接重写正确、本地干跑 CI 双站合并逻辑、浏览器 375px 移动端程序化检查(汉堡可见/侧栏收起/开合与导航自动收起/零横向溢出)
 - 实际结果：站点上线 /ai-all-in-one/career/;**专题内容随发布先行推送——Q8"随 Q4 一起推"的约定就此解耦(Q4 演进文档推送约定不变,仍待写完一起推)**;根/专题两份 AGENTS.md 与 decisions 第 8 节"不接站点"表述均已更新
 - 下一步：无(内容更新 push 即自动重新部署;新文档按 chapters.ts 加条+首页 descriptions 补句)
+
+### Q9 | 第2次处理
+- 问题或新增信息：用户要求"重新发布一次"
+- 本轮方案：检查本地与远程无差异、无未推送内容改动后,gh workflow run 手动触发 deploy-notes-site.yml(workflow_dispatch,run 36846014797)
+- 实际结果：部署成功;线上验证通过——首页/待办清单页/演进站根路径均 200,首页已包含后续会话新增的全部 12 篇文档卡片(待办清单、面试故事库、求职材料checklist 在列)
+- 下一步：无异常;若手机端显示旧版,浏览器强刷或清标签页重开即可(GitHub Pages 更新有分钟级延迟)
