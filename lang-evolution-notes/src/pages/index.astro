@@ -8,7 +8,20 @@ const descriptions: Record<string, string> = {
   Java演进路线: '一次编写到处运行,烟花之后在企业服务器扎根三十年',
   Go演进路线: '为软件工程服务的简单:goroutine 并发与云原生帝国',
   Rust演进路线: '内存安全的第三条路:把错误从运行时左移到编译期',
-  构建工具链速查: '五生态的清单文件、包管理器、构建与验收命令一张表',
+  C演进路线: '为重写 UNIX 而生的可移植汇编:把硬件和信任一起交给程序员',
+  'C++演进路线': '既要 C 的快又要抽象的美:零开销的誓言,和兼容背出的复杂',
+  CSharp演进路线: 'Java 逼出来的语言,激进迭代领跑语法,开源赎身跨平台重生',
+  SQL演进路线: '一篇论文统一数据世界:声明式+优化器,五十年换不走的接口',
+  'Next.js演进路线': 'React 只管画界面;框架接管路由与渲染,最后把服务器请回组件内部',
+  Vue演进路线: '渐进式框架:从一行 script 到全家桶,Proxy 重写自己,顺手造的 Vite 反哺全生态',
+  React演进路线: 'UI 是状态的函数:整棵重画 + 虚拟 DOM,渲染器从浏览器换到手机再换回服务器',
+  Redis演进路线: '把数据结构搬进内存:从缓存补丁长成后端事实上的内存数据层',
+  Spring演进路线: 'EJB 之重逼出轻量容器,Boot 约定优于配置二次创业:Java 后端二十年当家框架',
+  'Django-Flask-FastAPI演进路线': '全家桶→微内核→异步+类型:Python Web 三代接力,AI 应用 API 默认底座',
+  Kafka演进路线: '分布式提交日志:消息从读完就删,变成存下来就是资产',
+  MySQL演进路线: '够快免费好装拿下 Web,InnoDB 补上事务;兼容接口养大了整个换内核生态',
+  'Docker-K8s演进路线': '集装箱+舵手:内核隔离造出容器,Borg 经验开出 K8s,声明期望代替运维步骤',
+  构建工具链速查: '各生态的清单文件、包管理器、构建与验收命令一张表',
 };
 
 const matrix = [
@@ -17,6 +30,19 @@ const matrix = [
   { lang: 'Java', born: '1991 / 1995', empire: '企业信息化 + Android', lesson: '兼容神话是统治的根' },
   { lang: 'Go', born: '2007 / 2009', empire: '云原生(Docker/K8s)', lesson: '简单是特性,"不加什么"也是决策' },
   { lang: 'Rust', born: '2006 / 2015', empire: '新一代开发工具内核', lesson: '把错误从运行时左移到编译期' },
+  { lang: 'C', born: '1972', empire: '操作系统与嵌入式(万物底层)', lesson: '把信任交给程序员,自由与漏洞同源' },
+  { lang: 'C++', born: '1979 / 1985', empire: '游戏/浏览器/数据库(性能天花板)', lesson: '兼容是工业胜利的根,也是复杂度的根' },
+  { lang: 'C#', born: '2000 / 2002', empire: '企业开发(微软系)+ Unity 游戏', lesson: '绑死平台是高利贷,开源是赎身' },
+  { lang: 'SQL', born: '1970 / 1974', empire: '数据库与数据分析(数据的一切)', lesson: '被喊"取代"二十年,靠声明式内核活得更好' },
+  { lang: 'Next.js', born: '2016', empire: 'React 全栈框架事实标准', lesson: '替你做决定的是框架,替你还债的也是它' },
+  { lang: 'Vue', born: '2014', empire: '渐进式前端框架 + Vite 全生态构建标准', lesson: '渐进式是它的道,也是它的债' },
+  { lang: 'React', born: '2013', empire: '前端视图层事实标准 + 跨端渲染(Native/服务器)', lesson: '视图只做描述,渲染器可换;决定与债都归生态' },
+  { lang: 'Redis', born: '2009', empire: '后端内存数据层(缓存/会话/队列事实标准)', lesson: '快来自少等待而非多线程;开源许可也能走一个来回' },
+  { lang: 'Spring', born: '2002 / 2004', empire: 'Java 企业后端(Spring 全家桶)', lesson: '框架会重走老路,能自我革命的才活过二十年' },
+  { lang: 'Django / Flask / FastAPI', born: '2005 / 2010 / 2018', empire: 'Python 服务端(AI 应用 API 底座)', lesson: '三代不是换代是分工;类型标注到哪,契约跟到哪' },
+  { lang: 'Kafka', born: '2011', empire: '数据管道与流处理事实标准', lesson: '顺序写磁盘+可回放,消息从读完就删变成资产' },
+  { lang: 'MySQL', born: '1995', empire: 'Web 与云数据库事实标准(兼容生态)', lesson: '事实标准属于最容易上车的;接口兼容养大了换内核生态' },
+  { lang: 'Docker / K8s', born: '2013 / 2014', empire: '云原生底座(容器+编排)', lesson: '把核心捐给中立基金会,赢得整个生态;声明式 API 与 SQL 同魂' },
 ];
 ---
 
@@ -24,7 +50,7 @@ const matrix = [
   <section class="hero">
     <h1>语言演进笔记</h1>
     <p class="lead">
-      五门主流语言,五条"从痛点到诞生"的因果链。不背年表,只记每个环节解决了上一个环节的什么死结——
+      语言与框架的"从痛点到诞生"因果链。不背年表,只记每个环节解决了上一个环节的什么死结——
       有了这套层次,做技术选型、读 pi / Codex 这类工具的架构决策,就有了自己的判断。
     </p>
   </section>
@@ -62,12 +88,12 @@ const matrix = [
   </section>
 
   <section>
-    <h2 class="sec-title">五语言对照矩阵</h2>
+    <h2 class="sec-title">演进对照矩阵</h2>
     <article class="prose-inner">
       <table>
         <thead>
           <tr>
-            <th>语言</th><th>诞生</th><th>帝国来源</th><th>独特教训</th>
+            <th>主体</th><th>诞生</th><th>帝国来源</th><th>独特教训</th>
           </tr>
         </thead>
         <tbody>
