@@ -22,6 +22,7 @@ export const chapters: Chapter[] = [
   { id: '工作流agent实践', label: '工作流 agent 实践', group: 'engineering' },
   { id: '面试故事库', label: '面试故事库', group: 'ext' },
   { id: '求职材料checklist', label: '求职材料 checklist', group: 'ext' },
+  { id: '待办清单', label: '待办清单(用户侧)', group: 'ext' },
   { id: 'LLM基础认知-补充资料', label: '补充资料(占位登记)', group: 'ext' },
 ];
 
