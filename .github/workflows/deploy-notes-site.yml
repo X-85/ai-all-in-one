@@ -1,4 +1,4 @@
-name: Deploy lang-evolution-notes to Pages
+name: Deploy notes sites to Pages
 
 on:
   push:
@@ -6,6 +6,8 @@ on:
     paths:
       - 'lang-evolution-notes/**'
       - 'knowledge/doc/lang-evolution-notes/**'
+      - 'ai-career-notes/**'
+      - 'ai-career-notes-site/**'
       - '.github/workflows/deploy-notes-site.yml'
   workflow_dispatch:
 
@@ -23,11 +25,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        # withastro/action 内置 Upload Pages Artifact 步骤(产物名 github-pages),
-        # 不要再显式调 actions/upload-pages-artifact,否则同名产物 409 冲突
-      - uses: withastro/action@v3
+      - uses: actions/setup-node@v4
         with:
-          path: lang-evolution-notes
+          node-version: 22
+      # 一个仓库只有一个 Pages 地址:两个站点一次构建、合并产物、一次上传。
+      # lang-evolution-notes 挂根路径 /ai-all-in-one/,
+      # ai-career-notes-site 挂子路径 /ai-all-in-one/career/(其 astro.config 的 BASE 已适配)
+      - name: Build lang-evolution-notes
+        working-directory: lang-evolution-notes
+        run: |
+          npm ci
+          npm run build
+      - name: Build ai-career-notes-site
+        working-directory: ai-career-notes-site
+        run: |
+          npm ci
+          npm run build
+      - name: Merge career site under /career
+        run: cp -r ai-career-notes-site/dist lang-evolution-notes/dist/career
+      # 不用 withastro/action:它一次只构建单个项目,无法合并两站产物。
+      # 全 workflow 仅下面这一处 artifact 上传,不存在同名产物 409;
+      # 勿再新建部署到 github-pages environment 的 workflow,会互相覆盖
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: lang-evolution-notes/dist
 
   deploy:
     needs: build

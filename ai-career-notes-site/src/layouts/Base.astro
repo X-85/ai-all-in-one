@@ -1,0 +1,444 @@
+---
+import { chapters, chapterHref, GROUPS } from '../chapters';
+
+interface Props {
+  title?: string;
+  active?: string;
+}
+const { title = 'AI 求职技能笔记', active = '' } = Astro.props;
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : rawBase + '/';
+const homeHref = base;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="AI 应用工程岗求职技能笔记:原理 / 工程 / 质量 / 证据四层框架,一年多 agent 实战与 RAG 系统实践的体系化与证据化" />
+    <title>{title} · AI 求职技能笔记</title>
+    <script is:inline>
+      (function () {
+        var stored = null;
+        try {
+          stored = localStorage.getItem('ai-career:theme');
+        } catch (e) {}
+        var dark = stored
+          ? stored === 'dark'
+          : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      })();
+    </script>
+    <style is:global>
+      :root {
+        --bg: #faf9f6;
+        --bg-side: #f2f0ea;
+        --card: #ffffff;
+        --text: #23272e;
+        --muted: #6b7078;
+        --border: #e4e1d8;
+        --accent: #9a5b2d;
+        --code-bg: #efece5;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      }
+      [data-theme='dark'] {
+        --bg: #14161a;
+        --bg-side: #1a1d22;
+        --card: #1b1e24;
+        --text: #d6d8de;
+        --muted: #8b909a;
+        --border: #2a2e36;
+        --accent: #e0a06a;
+        --code-bg: #1e2127;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB',
+          'Microsoft YaHei', 'Segoe UI', sans-serif;
+        line-height: 1.75;
+        transition: background 0.2s, color 0.2s;
+      }
+
+      /* ---- topbar ---- */
+      .topbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3.2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0 1rem;
+        background: color-mix(in srgb, var(--bg) 85%, transparent);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--border);
+        z-index: 50;
+      }
+      .brand {
+        font-family: Georgia, 'Songti SC', 'SimSun', serif;
+        font-size: 1.12rem;
+        font-weight: 700;
+        color: var(--text);
+        text-decoration: none;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+      }
+      .brand .accent {
+        color: var(--accent);
+      }
+      .spacer {
+        flex: 1;
+      }
+      .icon-btn {
+        background: none;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--text);
+        width: 2.1rem;
+        height: 2.1rem;
+        cursor: pointer;
+        font-size: 0.95rem;
+        line-height: 1;
+      }
+      .icon-btn:hover {
+        border-color: var(--accent);
+      }
+      .ghost-btn {
+        background: none;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--muted);
+        height: 2.1rem;
+        padding: 0 0.7rem;
+        cursor: pointer;
+        font-size: 0.82rem;
+      }
+      .ghost-btn:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+      .ghost-btn[aria-pressed='true'] {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+      [data-theme='light'] .icon-moon {
+        display: none;
+      }
+      [data-theme='dark'] .icon-sun {
+        display: none;
+      }
+      .menu-btn {
+        display: none;
+      }
+
+      /* ---- frame ---- */
+      .frame {
+        display: flex;
+        padding-top: 3.2rem;
+        min-height: 100vh;
+      }
+      .sidebar {
+        width: 15.5rem;
+        flex-shrink: 0;
+        position: sticky;
+        top: 3.2rem;
+        height: calc(100vh - 3.2rem);
+        overflow-y: auto;
+        background: var(--bg-side);
+        border-right: 1px solid var(--border);
+        padding: 1.2rem 0.8rem;
+      }
+      .side-group {
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        color: var(--muted);
+        margin: 1.1rem 0.6rem 0.35rem;
+        text-transform: uppercase;
+      }
+      .side-link {
+        display: block;
+        padding: 0.42rem 0.7rem;
+        border-radius: 8px;
+        color: var(--text);
+        text-decoration: none;
+        font-size: 0.9rem;
+        margin-bottom: 2px;
+      }
+      .side-link:hover {
+        background: color-mix(in srgb, var(--accent) 12%, transparent);
+      }
+      .side-link.current {
+        background: color-mix(in srgb, var(--accent) 16%, transparent);
+        color: var(--accent);
+        font-weight: 600;
+      }
+
+      /* ---- content ---- */
+      .content {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        justify-content: center;
+        padding: 2.2rem 1.2rem 4rem;
+      }
+      .prose {
+        width: 100%;
+        max-width: 46rem;
+      }
+      .prose h1 {
+        font-family: Georgia, 'Songti SC', 'SimSun', serif;
+        font-size: 1.85rem;
+        line-height: 1.35;
+        margin: 0 0 1.2rem;
+        padding-bottom: 0.6rem;
+        border-bottom: 2px solid var(--border);
+      }
+      .prose h2 {
+        font-family: Georgia, 'Songti SC', 'SimSun', serif;
+        font-size: 1.35rem;
+        margin: 2.4rem 0 0.9rem;
+        padding-bottom: 0.35rem;
+        border-bottom: 1px solid var(--border);
+      }
+      .prose h3 {
+        font-size: 1.1rem;
+        margin: 1.8rem 0 0.6rem;
+      }
+      .prose p {
+        margin: 0.85rem 0;
+      }
+      .prose a {
+        color: var(--accent);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 3px;
+      }
+      .prose ul,
+      .prose ol {
+        padding-left: 1.4rem;
+      }
+      .prose li {
+        margin: 0.3rem 0;
+      }
+      .prose input[type='checkbox'] {
+        margin-right: 0.4rem;
+        accent-color: var(--accent);
+      }
+      .prose blockquote {
+        margin: 1rem 0;
+        padding: 0.1rem 1rem;
+        border-left: 3px solid var(--accent);
+        background: color-mix(in srgb, var(--accent) 7%, transparent);
+        border-radius: 0 8px 8px 0;
+        color: var(--muted);
+      }
+      .prose code:not(pre code) {
+        background: var(--code-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        padding: 0.08rem 0.35rem;
+        font-size: 0.86em;
+        font-family: 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+      }
+      .prose pre {
+        border-radius: 10px;
+        padding: 1rem 1.2rem;
+        overflow-x: auto;
+        font-size: 0.86rem;
+        line-height: 1.6;
+        box-shadow: var(--shadow);
+      }
+      .prose pre code {
+        font-family: 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+      }
+      .prose table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.87rem;
+        margin: 1.1rem 0;
+        display: block;
+        overflow-x: auto;
+      }
+      .prose th {
+        background: var(--code-bg);
+        font-weight: 600;
+      }
+      .prose th,
+      .prose td {
+        border: 1px solid var(--border);
+        padding: 0.45rem 0.7rem;
+        text-align: left;
+        vertical-align: top;
+      }
+      .prose tr:nth-child(even) td {
+        background: color-mix(in srgb, var(--code-bg) 40%, transparent);
+      }
+      .prose hr {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 2.2rem 0;
+      }
+      .prose strong {
+        color: var(--text);
+      }
+      .prose img {
+        max-width: 100%;
+      }
+
+      /* ---- pager / footer ---- */
+      .pager {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-top: 3rem;
+        padding-top: 1.2rem;
+        border-top: 1px solid var(--border);
+      }
+      .pager-link {
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.92rem;
+        font-weight: 600;
+      }
+      .pager-link:hover {
+        text-decoration: underline;
+      }
+      .site-footer {
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.78rem;
+        padding: 1.5rem 0 2.5rem;
+      }
+      .site-footer a {
+        color: var(--muted);
+      }
+
+      /* ---- immersive ---- */
+      body.immersive .topbar,
+      body.immersive .sidebar {
+        display: none;
+      }
+      body.immersive .frame {
+        padding-top: 0;
+      }
+
+      /* ---- mobile ---- */
+      @media (max-width: 860px) {
+        .menu-btn {
+          display: inline-block;
+        }
+        .ghost-btn {
+          display: none;
+        }
+        .sidebar {
+          position: fixed;
+          left: 0;
+          top: 3.2rem;
+          z-index: 40;
+          transform: translateX(-100%);
+          transition: transform 0.25s ease;
+          box-shadow: var(--shadow);
+        }
+        body.sidebar-open .sidebar {
+          transform: translateX(0);
+        }
+        .content {
+          padding: 1.4rem 1rem 3rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <button id="menu-btn" class="icon-btn menu-btn" aria-label="打开目录">☰</button>
+      <a class="brand" href={homeHref}>AI 求职<span class="accent"> · </span>Notes</a>
+      <div class="spacer"></div>
+      <button id="immersive-btn" class="ghost-btn" type="button" aria-pressed="false">
+        ⤢ 沉浸阅读
+      </button>
+      <button id="theme-btn" class="icon-btn" type="button" aria-label="切换深浅色主题">
+        <span class="icon-sun">☀</span><span class="icon-moon">☾</span>
+      </button>
+    </header>
+
+    <div class="frame">
+      <aside class="sidebar" id="sidebar">
+        <nav>
+          <a class="side-link" class:list={[{ current: active === '' }]} href={homeHref}>
+            首页 · 总览
+          </a>
+          {
+            GROUPS.map((g) => (
+              <>
+                <div class="side-group">{g.label}</div>
+                {chapters
+                  .filter((c) => c.group === g.key)
+                  .map((c) => (
+                    <a
+                      class="side-link"
+                      class:list={[{ current: active === c.id }]}
+                      href={chapterHref(c.id)}
+                    >
+                      {c.label}
+                    </a>
+                  ))}
+              </>
+            ))
+          }
+        </nav>
+      </aside>
+
+      <main class="content">
+        <article class="prose">
+          <slot />
+        </article>
+      </main>
+    </div>
+
+    <script>
+      const themeBtn = document.getElementById('theme-btn');
+      themeBtn?.addEventListener('click', () => {
+        const cur = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+        const next = cur === 'dark' ? 'light' : 'dark';
+        document.documentElement.dataset.theme = next;
+        try {
+          localStorage.setItem('ai-career:theme', next);
+        } catch (e) {}
+      });
+
+      const immBtn = document.getElementById('immersive-btn');
+      try {
+        if (localStorage.getItem('ai-career:imm') === '1') {
+          document.body.classList.add('immersive');
+          immBtn?.setAttribute('aria-pressed', 'true');
+        }
+      } catch (e) {}
+      immBtn?.addEventListener('click', () => {
+        const on = document.body.classList.toggle('immersive');
+        immBtn.setAttribute('aria-pressed', String(on));
+        try {
+          localStorage.setItem('ai-career:imm', on ? '1' : '0');
+        } catch (e) {}
+      });
+
+      const menuBtn = document.getElementById('menu-btn');
+      menuBtn?.addEventListener('click', () => {
+        document.body.classList.toggle('sidebar-open');
+      });
+      document.querySelectorAll('.side-link').forEach((a) =>
+        a.addEventListener('click', () => document.body.classList.remove('sidebar-open'))
+      );
+    </script>
+  </body>
+</html>

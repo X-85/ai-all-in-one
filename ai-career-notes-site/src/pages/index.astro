@@ -1,0 +1,162 @@
+---
+import { chapters, chapterHref, GROUPS } from '../chapters';
+import Base from '../layouts/Base.astro';
+
+const descriptions: Record<string, string> = {
+  'AI应用工程岗技能地图':
+    '四层框架总目录:原理 20% / 工程 30% / 质量 20% / 证据 30%,目标岗位画像、时间规划与文档清单',
+  'LLM基础认知-生成机制(上)':
+    'token 化 / 下一 token 预测与幻觉 / 采样参数——LLM 不是在回答问题,是在续写文本',
+  'LLM基础认知-生成机制(下)':
+    '上下文与注意力 / 能力边界与工具外挂 / 推理模型 / 微调 vs RAG / 多模态与格局',
+  'LLM基础认知-检索原理':
+    'embedding / 向量检索与失效模式 / rerank 两段式 / chunking——RAG 管线的每个设计都是被检索的物理规律逼出来的',
+  'RAG系统设计复盘':
+    'FAQ 智能体问答系统(钉钉 + AstrBot)全链路复盘:设计存档 → 原理对照 → 改进',
+  'Agent编码工具横评':
+    '六工具(codex / pi / codebuddy / zcode / zed / claude code)七维度选型框架:回填区已建,待本人补真实体感',
+  '工作流agent实践':
+    '一年多实战的工作流方法论:上下文喂对、验收前置、危险操作受控——工具换来换去,这些不变',
+  'LLM基础认知-补充资料':
+    '原理层延伸知识点登记处:知识点 + 延伸方向 + 触发条件,到了再展开,防知识面焦虑性扩张',
+};
+
+const groupIntro: Record<string, string> = {
+  overview: '专题定位与总框架',
+  principle: '能从原理讲到工程取舍,不追数学推导',
+  engineering: 'RAG 全链路 / agent 编排 / 工作流,以自建系统与六工具实战为素材',
+  ext: '占位登记,触发条件到了再展开',
+};
+
+const framework = [
+  { layer: '原理层', ratio: '20%', focus: '深度判据是"能从原理讲到工程取舍":生成机制上/下、检索原理已成稿' },
+  { layer: '工程层', ratio: '30%', focus: 'RAG 全链路 / agent 编排 / 工作流:复盘与工作流实践成稿,工具横评待回填' },
+  { layer: '质量层', ratio: '20%', focus: 'evals / 可观测 / 成本与延迟——市场最缺的一环,骨架待发起' },
+  { layer: '证据层', ratio: '30%', focus: '作品集 / 量化指标 / 开源贡献 / 公开输出:作品一是本知识库,作品二是 RAG 系统' },
+];
+---
+
+<Base active="" title="首页">
+  <section class="hero">
+    <h1>AI 求职技能笔记</h1>
+    <p class="lead">
+      以 AI 应用工程岗为目标(2027 年年后求职),把一年多 agent 实战与 FAQ 问答 RAG
+      系统实践整理为四层框架——核心动作是体系化 + 证据化:散落的经验变成能讲的知识,会的东西变成可展示的作品与指标。
+    </p>
+  </section>
+
+  {
+    GROUPS.map((g) => (
+      <section>
+        <h2 class="sec-title">{g.label}</h2>
+        <p class="group-intro">{groupIntro[g.key]}</p>
+        <div class="cards">
+          {chapters
+            .filter((c) => c.group === g.key)
+            .map((c) => (
+              <a class="card" href={chapterHref(c.id)}>
+                <div class="card-label">{c.label}</div>
+                <div class="card-desc">{descriptions[c.id]}</div>
+              </a>
+            ))}
+        </div>
+      </section>
+    ))
+  }
+
+  <section>
+    <h2 class="sec-title">四层框架总览</h2>
+    <article class="prose-inner">
+      <table>
+        <thead>
+          <tr>
+            <th>层</th><th>占比</th><th>定位与进度</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            framework.map((row) => (
+              <tr>
+                <td><strong>{row.layer}</strong></td>
+                <td>{row.ratio}</td>
+                <td>{row.focus}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </article>
+  </section>
+
+  <style>
+    .hero h1 {
+      font-family: Georgia, 'Songti SC', 'SimSun', serif;
+      font-size: 2.3rem;
+      margin: 1rem 0 0.6rem;
+    }
+    .lead {
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 40rem;
+    }
+    .sec-title {
+      font-family: Georgia, 'Songti SC', 'SimSun', serif;
+      font-size: 1.3rem;
+      margin: 2.4rem 0 0.6rem;
+      padding-bottom: 0.35rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .group-intro {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin: 0 0 0.9rem;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+      gap: 0.8rem;
+    }
+    .card {
+      display: block;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.1rem;
+      text-decoration: none;
+      color: var(--text);
+      box-shadow: var(--shadow);
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+    .card-label {
+      font-family: Georgia, 'Songti SC', 'SimSun', serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin-bottom: 0.35rem;
+    }
+    .card-desc {
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.6;
+    }
+    .prose-inner table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.87rem;
+    }
+    .prose-inner th {
+      background: var(--code-bg);
+      font-weight: 600;
+    }
+    .prose-inner th,
+    .prose-inner td {
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.7rem;
+      text-align: left;
+      vertical-align: top;
+    }
+  </style>
+</Base>

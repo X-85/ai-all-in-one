@@ -1,0 +1,67 @@
+---
+import { getCollection, render } from 'astro:content';
+import { chapters, chapterHref } from '../../chapters';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const notes = await getCollection('notes');
+  return notes.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const idx = chapters.findIndex((c) => c.id === entry.id);
+const prev = idx > 0 ? chapters[idx - 1] : null;
+const next = idx >= 0 && idx < chapters.length - 1 ? chapters[idx + 1] : null;
+---
+
+<Base title={entry.id} active={entry.id}>
+  <Content />
+  <nav class="pager">
+    {
+      prev ? (
+        <a class="pager-link" href={chapterHref(prev.id)}>
+          ← {prev.label}
+        </a>
+      ) : (
+        <span />
+      )
+    }
+    {
+      next ? (
+        <a class="pager-link" href={chapterHref(next.id)}>
+          {next.label} →
+        </a>
+      ) : (
+        <span />
+      )
+    }
+  </nav>
+  <footer class="site-footer">
+    由 <a href="https://github.com/X-85/ai-all-in-one">ai-all-in-one</a> 知识库驱动 · 文档即内容源
+  </footer>
+</Base>
+
+<style>
+  .pager {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 3rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--border);
+  }
+  .pager-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.92rem;
+    font-weight: 600;
+  }
+  .pager-link:hover {
+    text-decoration: underline;
+  }
+</style>
