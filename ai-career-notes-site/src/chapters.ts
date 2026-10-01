@@ -20,6 +20,7 @@ export const chapters: Chapter[] = [
   { id: 'RAG系统设计复盘', label: 'RAG 系统设计复盘', group: 'engineering' },
   { id: 'Agent编码工具横评', label: '工具横评(待回填)', group: 'engineering' },
   { id: '工作流agent实践', label: '工作流 agent 实践', group: 'engineering' },
+  { id: '面试故事库', label: '面试故事库', group: 'ext' },
   { id: 'LLM基础认知-补充资料', label: '补充资料(占位登记)', group: 'ext' },
 ];
 
