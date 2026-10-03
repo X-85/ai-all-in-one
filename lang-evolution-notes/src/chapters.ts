@@ -24,6 +24,7 @@ export const chapters: Chapter[] = [
   { id: 'MySQL演进路线', label: 'MySQL', group: 'route' },
   { id: 'Docker-K8s演进路线', label: 'Docker → K8s', group: 'route' },
   { id: '构建工具链速查', label: '构建工具链速查', group: 'ref' },
+  { id: '语言主战场速查', label: '语言主战场速查', group: 'ref' },
 ];
 
 export function chapterHref(id: string): string {

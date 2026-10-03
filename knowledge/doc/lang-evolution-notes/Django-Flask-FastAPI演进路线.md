@@ -99,6 +99,9 @@ WSGI 同步攒了十五年的 IO 债                     → 三家先后补异�
 **Q5：为什么 FastAPI 能自动生成文档，Django 要手写？**
 因为契约的来源不同：FastAPI 把类型标注当契约，文档从签名派生，天然同步；Django 时代类型标注还不存在，契约只能靠手写文档维护——"文档过期"是手写契约的必然病，不是谁懒。
 
+**Q6：FastAPI 算语言吗？**
+不算，是框架——三代主角都不是语言。写的仍是纯 Python（装饰器 + 类型标注），没有自己的语法和编译器，跑在 CPython 上；三层模型里它在框架层，底下是 Python 语言层与运行时层（判定先例：Next.js / React / Vue 篇的同名 FAQ）。它"像语言"是因为行话密（路径装饰器、Pydantic 模型、async def），但那是框架 API 不是语法——写错只是不生效或抛 Python 的错，不存在"FastAPI 编译不过"。
+
 ---
 
 注：Django/Flask/FastAPI 与 Express/NestJS 的跨生态对比、SQLAlchemy 2.0 异步实务、Django Admin 深度定制，遵循"一篇文档只回答一个问题"的原则，另行成文，不混入本文。
