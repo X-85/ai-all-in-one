@@ -1,7 +1,7 @@
 export interface Chapter {
   id: string;
   label: string;
-  group: 'overview' | 'principle' | 'engineering' | 'ext';
+  group: 'overview' | 'principle' | 'engineering' | 'quality' | 'ext';
 }
 
 // 侧栏分组(与技能地图四层框架对应),布局循环渲染
@@ -9,6 +9,7 @@ export const GROUPS: { key: Chapter['group']; label: string }[] = [
   { key: 'overview', label: '主干' },
   { key: 'principle', label: '原理层' },
   { key: 'engineering', label: '工程层' },
+  { key: 'quality', label: '质量层' },
   { key: 'ext', label: '延伸' },
 ];
 
@@ -22,8 +23,11 @@ export const chapters: Chapter[] = [
   { id: 'RAG系统设计复盘', label: 'RAG 系统设计复盘', group: 'engineering' },
   { id: 'Agent编码工具横评', label: '工具横评(待回填)', group: 'engineering' },
   { id: '工作流agent实践', label: '工作流 agent 实践', group: 'engineering' },
+  { id: 'FastAPI学习指南', label: 'FastAPI 学习指南', group: 'engineering' },
+  { id: 'RAG评测实践-golden-set与报告', label: '评测报告(模板待填)', group: 'quality' },
   { id: '面试故事库', label: '面试故事库', group: 'ext' },
   { id: '求职材料checklist', label: '求职材料 checklist', group: 'ext' },
+  { id: '公开输出-从三分法到四路由(初稿)', label: '公开输出·四路由(初稿)', group: 'ext' },
   { id: '待办清单', label: '待办清单(用户侧)', group: 'ext' },
   { id: 'LLM基础认知-补充资料', label: '补充资料(占位登记)', group: 'ext' },
 ];
